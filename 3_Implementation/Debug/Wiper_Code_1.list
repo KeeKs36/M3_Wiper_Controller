@@ -1,0 +1,736 @@
+
+Wiper_Code_1.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000330  08000000  08000000  00010000  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         0000047c  08000330  08000330  00010330  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  080007ac  080007b4  000107b4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  080007ac  080007ac  000107b4  2**0
+                  CONTENTS
+  4 .ARM          00000000  080007ac  080007ac  000107b4  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  080007ac  080007b4  000107b4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  080007ac  080007ac  000107ac  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  080007b0  080007b0  000107b0  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000000  20000000  20000000  000107b4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .ccmram       00000000  10000000  10000000  000107b4  2**0
+                  CONTENTS
+ 10 .bss          00000030  20000000  20000000  00020000  2**2
+                  ALLOC
+ 11 ._user_heap_stack 00000600  20000030  20000030  00020000  2**0
+                  ALLOC
+ 12 .ARM.attributes 0000002a  00000000  00000000  000107b4  2**0
+                  CONTENTS, READONLY
+ 13 .debug_info   00000372  00000000  00000000  000107de  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_abbrev 0000020c  00000000  00000000  00010b50  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_aranges 000000a8  00000000  00000000  00010d60  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_ranges 00000068  00000000  00000000  00010e08  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_macro  00001bbf  00000000  00000000  00010e70  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_line   00000c2c  00000000  00000000  00012a2f  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .debug_str    0000820c  00000000  00000000  0001365b  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .comment      00000050  00000000  00000000  0001b867  2**0
+                  CONTENTS, READONLY
+ 21 .debug_frame  000001a4  00000000  00000000  0001b8b8  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000330 <__do_global_dtors_aux>:
+ 8000330:	b510      	push	{r4, lr}
+ 8000332:	4c05      	ldr	r4, [pc, #20]	; (8000348 <__do_global_dtors_aux+0x18>)
+ 8000334:	7823      	ldrb	r3, [r4, #0]
+ 8000336:	b933      	cbnz	r3, 8000346 <__do_global_dtors_aux+0x16>
+ 8000338:	4b04      	ldr	r3, [pc, #16]	; (800034c <__do_global_dtors_aux+0x1c>)
+ 800033a:	b113      	cbz	r3, 8000342 <__do_global_dtors_aux+0x12>
+ 800033c:	4804      	ldr	r0, [pc, #16]	; (8000350 <__do_global_dtors_aux+0x20>)
+ 800033e:	f3af 8000 	nop.w
+ 8000342:	2301      	movs	r3, #1
+ 8000344:	7023      	strb	r3, [r4, #0]
+ 8000346:	bd10      	pop	{r4, pc}
+ 8000348:	20000000 	.word	0x20000000
+ 800034c:	00000000 	.word	0x00000000
+ 8000350:	08000794 	.word	0x08000794
+
+08000354 <frame_dummy>:
+ 8000354:	b508      	push	{r3, lr}
+ 8000356:	4b03      	ldr	r3, [pc, #12]	; (8000364 <frame_dummy+0x10>)
+ 8000358:	b11b      	cbz	r3, 8000362 <frame_dummy+0xe>
+ 800035a:	4903      	ldr	r1, [pc, #12]	; (8000368 <frame_dummy+0x14>)
+ 800035c:	4803      	ldr	r0, [pc, #12]	; (800036c <frame_dummy+0x18>)
+ 800035e:	f3af 8000 	nop.w
+ 8000362:	bd08      	pop	{r3, pc}
+ 8000364:	00000000 	.word	0x00000000
+ 8000368:	20000004 	.word	0x20000004
+ 800036c:	08000794 	.word	0x08000794
+
+08000370 <EXTI0_IRQHandler>:
+volatile long flag_stat=0,freq_status=0;
+volatile unsigned int timing_monitor = 0;
+volatile unsigned int bit_1 = 0;
+
+void EXTI0_IRQHandler(void)
+{
+ 8000370:	b580      	push	{r7, lr}
+ 8000372:	af00      	add	r7, sp, #0
+	timing_monitor = 0;//Clearing the timing_monitor variable. By using 'timing_monitor' variable we are going to count the time using Instruction Cycles Concept
+ 8000374:	4b11      	ldr	r3, [pc, #68]	; (80003bc <EXTI0_IRQHandler+0x4c>)
+ 8000376:	2200      	movs	r2, #0
+ 8000378:	601a      	str	r2, [r3, #0]
+	switch_stat = PORTA_IDR & (1<<0);//Checking the status of the PORTA 0th pin(i.e., switch)
+ 800037a:	4b11      	ldr	r3, [pc, #68]	; (80003c0 <EXTI0_IRQHandler+0x50>)
+ 800037c:	681b      	ldr	r3, [r3, #0]
+ 800037e:	f003 0301 	and.w	r3, r3, #1
+ 8000382:	4a10      	ldr	r2, [pc, #64]	; (80003c4 <EXTI0_IRQHandler+0x54>)
+ 8000384:	6013      	str	r3, [r2, #0]
+	while(switch_stat == 1)//The Condition will be true until the switch is press
+ 8000386:	e00a      	b.n	800039e <EXTI0_IRQHandler+0x2e>
+	{
+		timing_monitor++;//Here we are incrementing the 'timing_monitor' variable to monitor the number of instruction cycles generated
+ 8000388:	4b0c      	ldr	r3, [pc, #48]	; (80003bc <EXTI0_IRQHandler+0x4c>)
+ 800038a:	681b      	ldr	r3, [r3, #0]
+ 800038c:	3301      	adds	r3, #1
+ 800038e:	4a0b      	ldr	r2, [pc, #44]	; (80003bc <EXTI0_IRQHandler+0x4c>)
+ 8000390:	6013      	str	r3, [r2, #0]
+		switch_stat = PORTA_IDR & (1<<0);//Checking the status of the PORTA 0th pin(i.e., switch)
+ 8000392:	4b0b      	ldr	r3, [pc, #44]	; (80003c0 <EXTI0_IRQHandler+0x50>)
+ 8000394:	681b      	ldr	r3, [r3, #0]
+ 8000396:	f003 0301 	and.w	r3, r3, #1
+ 800039a:	4a0a      	ldr	r2, [pc, #40]	; (80003c4 <EXTI0_IRQHandler+0x54>)
+ 800039c:	6013      	str	r3, [r2, #0]
+	while(switch_stat == 1)//The Condition will be true until the switch is press
+ 800039e:	4b09      	ldr	r3, [pc, #36]	; (80003c4 <EXTI0_IRQHandler+0x54>)
+ 80003a0:	681b      	ldr	r3, [r3, #0]
+ 80003a2:	2b01      	cmp	r3, #1
+ 80003a4:	d0f0      	beq.n	8000388 <EXTI0_IRQHandler+0x18>
+	}
+	switch_stat = PORTA_IDR & (1<<0);//Checking the status of the PORTA 0th pin(i.e., switch)
+ 80003a6:	4b06      	ldr	r3, [pc, #24]	; (80003c0 <EXTI0_IRQHandler+0x50>)
+ 80003a8:	681b      	ldr	r3, [r3, #0]
+ 80003aa:	f003 0301 	and.w	r3, r3, #1
+ 80003ae:	4a05      	ldr	r2, [pc, #20]	; (80003c4 <EXTI0_IRQHandler+0x54>)
+ 80003b0:	6013      	str	r3, [r2, #0]
+	Intr_Clean_Function();//External Interrupt Clear Function
+ 80003b2:	f000 f861 	bl	8000478 <Intr_Clean_Function>
+}
+ 80003b6:	bf00      	nop
+ 80003b8:	bd80      	pop	{r7, pc}
+ 80003ba:	bf00      	nop
+ 80003bc:	20000028 	.word	0x20000028
+ 80003c0:	40020010 	.word	0x40020010
+ 80003c4:	2000001c 	.word	0x2000001c
+
+080003c8 <Init_Function>:
+
+static void Init_Function(void)
+{
+ 80003c8:	b480      	push	{r7}
+ 80003ca:	af00      	add	r7, sp, #0
+	RCC_AHB1ENR |= (1<<3)|(1<<0);//Enable System Clock For GPIOA and GPIOD
+ 80003cc:	4b10      	ldr	r3, [pc, #64]	; (8000410 <Init_Function+0x48>)
+ 80003ce:	681b      	ldr	r3, [r3, #0]
+ 80003d0:	4a0f      	ldr	r2, [pc, #60]	; (8000410 <Init_Function+0x48>)
+ 80003d2:	f043 0309 	orr.w	r3, r3, #9
+ 80003d6:	6013      	str	r3, [r2, #0]
+	PORTA_MODER &= 0x00000000;//Initially Clear all the bits in the MODE register for PORTA
+ 80003d8:	4b0e      	ldr	r3, [pc, #56]	; (8000414 <Init_Function+0x4c>)
+ 80003da:	681b      	ldr	r3, [r3, #0]
+ 80003dc:	4b0d      	ldr	r3, [pc, #52]	; (8000414 <Init_Function+0x4c>)
+ 80003de:	2200      	movs	r2, #0
+ 80003e0:	601a      	str	r2, [r3, #0]
+	PORTD_MODER &= 0x00000000;//Initially Clear all the bits in the MODE register for PORTD
+ 80003e2:	4b0d      	ldr	r3, [pc, #52]	; (8000418 <Init_Function+0x50>)
+ 80003e4:	681b      	ldr	r3, [r3, #0]
+ 80003e6:	4b0c      	ldr	r3, [pc, #48]	; (8000418 <Init_Function+0x50>)
+ 80003e8:	2200      	movs	r2, #0
+ 80003ea:	601a      	str	r2, [r3, #0]
+	PORTA_MODER |= (0<<1)|(0<<0);//SET Input Direction for PORTA 0th pin
+ 80003ec:	4b09      	ldr	r3, [pc, #36]	; (8000414 <Init_Function+0x4c>)
+ 80003ee:	4a09      	ldr	r2, [pc, #36]	; (8000414 <Init_Function+0x4c>)
+ 80003f0:	681b      	ldr	r3, [r3, #0]
+ 80003f2:	6013      	str	r3, [r2, #0]
+	PORTD_MODER |= (1<<24)|(1<<26)|(1<<28)|(1<<30);//SET Output Direction for PORTD 12th, 13th, 14th and 15th pins
+ 80003f4:	4b08      	ldr	r3, [pc, #32]	; (8000418 <Init_Function+0x50>)
+ 80003f6:	681b      	ldr	r3, [r3, #0]
+ 80003f8:	4a07      	ldr	r2, [pc, #28]	; (8000418 <Init_Function+0x50>)
+ 80003fa:	f043 43aa 	orr.w	r3, r3, #1426063360	; 0x55000000
+ 80003fe:	6013      	str	r3, [r2, #0]
+	PORTD_ODR = 0x0000;//Initially clear all the Output pins of PORTD
+ 8000400:	4b06      	ldr	r3, [pc, #24]	; (800041c <Init_Function+0x54>)
+ 8000402:	2200      	movs	r2, #0
+ 8000404:	601a      	str	r2, [r3, #0]
+}
+ 8000406:	bf00      	nop
+ 8000408:	46bd      	mov	sp, r7
+ 800040a:	bc80      	pop	{r7}
+ 800040c:	4770      	bx	lr
+ 800040e:	bf00      	nop
+ 8000410:	40023830 	.word	0x40023830
+ 8000414:	40020000 	.word	0x40020000
+ 8000418:	40020c00 	.word	0x40020c00
+ 800041c:	40020c14 	.word	0x40020c14
+
+08000420 <Intr_Function_Init>:
+
+static void Intr_Function_Init(void)//External Interrupt Initialization Function
+{
+ 8000420:	b480      	push	{r7}
+ 8000422:	af00      	add	r7, sp, #0
+	RCC_APB2ENR |= RCC_APB2ENR_AFIOEN;//Enable the System Clock
+ 8000424:	4b0f      	ldr	r3, [pc, #60]	; (8000464 <Intr_Function_Init+0x44>)
+ 8000426:	681b      	ldr	r3, [r3, #0]
+ 8000428:	4a0e      	ldr	r2, [pc, #56]	; (8000464 <Intr_Function_Init+0x44>)
+ 800042a:	f043 0301 	orr.w	r3, r3, #1
+ 800042e:	6013      	str	r3, [r2, #0]
+	SYSCFG_EXTICR1 |= SYSCFG_EXTICR1_EXTI0_PA;//Enable External Interrupt_0 for PORT_A of PIN_0 (PA0)
+ 8000430:	4b0d      	ldr	r3, [pc, #52]	; (8000468 <Intr_Function_Init+0x48>)
+ 8000432:	4a0d      	ldr	r2, [pc, #52]	; (8000468 <Intr_Function_Init+0x48>)
+ 8000434:	681b      	ldr	r3, [r3, #0]
+ 8000436:	6013      	str	r3, [r2, #0]
+	EXTI_RTSR |= (1<<0);//SET External Interrupt 0 in Rising Edge
+ 8000438:	4b0c      	ldr	r3, [pc, #48]	; (800046c <Intr_Function_Init+0x4c>)
+ 800043a:	681b      	ldr	r3, [r3, #0]
+ 800043c:	4a0b      	ldr	r2, [pc, #44]	; (800046c <Intr_Function_Init+0x4c>)
+ 800043e:	f043 0301 	orr.w	r3, r3, #1
+ 8000442:	6013      	str	r3, [r2, #0]
+	EXIT_IMR |= (1<<0);//SET External Interrupt Masking
+ 8000444:	4b0a      	ldr	r3, [pc, #40]	; (8000470 <Intr_Function_Init+0x50>)
+ 8000446:	681b      	ldr	r3, [r3, #0]
+ 8000448:	4a09      	ldr	r2, [pc, #36]	; (8000470 <Intr_Function_Init+0x50>)
+ 800044a:	f043 0301 	orr.w	r3, r3, #1
+ 800044e:	6013      	str	r3, [r2, #0]
+	NVIC_ISER_BASE_ADDRESS |= (1<<EXTI0_IRQn);// SET Interrupt priority for NVIC
+ 8000450:	4b08      	ldr	r3, [pc, #32]	; (8000474 <Intr_Function_Init+0x54>)
+ 8000452:	681b      	ldr	r3, [r3, #0]
+ 8000454:	4a07      	ldr	r2, [pc, #28]	; (8000474 <Intr_Function_Init+0x54>)
+ 8000456:	f043 0340 	orr.w	r3, r3, #64	; 0x40
+ 800045a:	6013      	str	r3, [r2, #0]
+}
+ 800045c:	bf00      	nop
+ 800045e:	46bd      	mov	sp, r7
+ 8000460:	bc80      	pop	{r7}
+ 8000462:	4770      	bx	lr
+ 8000464:	40023844 	.word	0x40023844
+ 8000468:	40013808 	.word	0x40013808
+ 800046c:	40013c08 	.word	0x40013c08
+ 8000470:	40013c00 	.word	0x40013c00
+ 8000474:	e000e100 	.word	0xe000e100
+
+08000478 <Intr_Clean_Function>:
+
+static void Intr_Clean_Function(void)//External Interrupt Clear Function
+{
+ 8000478:	b480      	push	{r7}
+ 800047a:	af00      	add	r7, sp, #0
+	EXIT_PR |= (1<<0);//SET To Clear the Pending Registers
+ 800047c:	4b04      	ldr	r3, [pc, #16]	; (8000490 <Intr_Clean_Function+0x18>)
+ 800047e:	681b      	ldr	r3, [r3, #0]
+ 8000480:	4a03      	ldr	r2, [pc, #12]	; (8000490 <Intr_Clean_Function+0x18>)
+ 8000482:	f043 0301 	orr.w	r3, r3, #1
+ 8000486:	6013      	str	r3, [r2, #0]
+}
+ 8000488:	bf00      	nop
+ 800048a:	46bd      	mov	sp, r7
+ 800048c:	bc80      	pop	{r7}
+ 800048e:	4770      	bx	lr
+ 8000490:	40013c14 	.word	0x40013c14
+
+08000494 <Freq_Function>:
+
+static void Freq_Function(volatile short int n)//Frequency Function
+{
+ 8000494:	b480      	push	{r7}
+ 8000496:	b085      	sub	sp, #20
+ 8000498:	af00      	add	r7, sp, #0
+ 800049a:	4603      	mov	r3, r0
+ 800049c:	80fb      	strh	r3, [r7, #6]
+	volatile unsigned int i;
+
+	PORTD_ODR = 0x5000;//RED=1, GREEN=1, ORANGE=0, BLUE=0
+ 800049e:	4b33      	ldr	r3, [pc, #204]	; (800056c <Freq_Function+0xd8>)
+ 80004a0:	f44f 42a0 	mov.w	r2, #20480	; 0x5000
+ 80004a4:	601a      	str	r2, [r3, #0]
+	for(i=0;i<(n * n * 1000);i++);
+ 80004a6:	2300      	movs	r3, #0
+ 80004a8:	60fb      	str	r3, [r7, #12]
+ 80004aa:	e002      	b.n	80004b2 <Freq_Function+0x1e>
+ 80004ac:	68fb      	ldr	r3, [r7, #12]
+ 80004ae:	3301      	adds	r3, #1
+ 80004b0:	60fb      	str	r3, [r7, #12]
+ 80004b2:	88fb      	ldrh	r3, [r7, #6]
+ 80004b4:	b21b      	sxth	r3, r3
+ 80004b6:	88fa      	ldrh	r2, [r7, #6]
+ 80004b8:	b212      	sxth	r2, r2
+ 80004ba:	fb02 f303 	mul.w	r3, r2, r3
+ 80004be:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
+ 80004c2:	fb02 f303 	mul.w	r3, r2, r3
+ 80004c6:	461a      	mov	r2, r3
+ 80004c8:	68fb      	ldr	r3, [r7, #12]
+ 80004ca:	429a      	cmp	r2, r3
+ 80004cc:	d8ee      	bhi.n	80004ac <Freq_Function+0x18>
+	PORTD_ODR = 0x6000;//RED=1, GREEN=0, ORANGE=1, BLUE=0
+ 80004ce:	4b27      	ldr	r3, [pc, #156]	; (800056c <Freq_Function+0xd8>)
+ 80004d0:	f44f 42c0 	mov.w	r2, #24576	; 0x6000
+ 80004d4:	601a      	str	r2, [r3, #0]
+	for(i=0;i<(n * n * 1000);i++);
+ 80004d6:	2300      	movs	r3, #0
+ 80004d8:	60fb      	str	r3, [r7, #12]
+ 80004da:	e002      	b.n	80004e2 <Freq_Function+0x4e>
+ 80004dc:	68fb      	ldr	r3, [r7, #12]
+ 80004de:	3301      	adds	r3, #1
+ 80004e0:	60fb      	str	r3, [r7, #12]
+ 80004e2:	88fb      	ldrh	r3, [r7, #6]
+ 80004e4:	b21b      	sxth	r3, r3
+ 80004e6:	88fa      	ldrh	r2, [r7, #6]
+ 80004e8:	b212      	sxth	r2, r2
+ 80004ea:	fb02 f303 	mul.w	r3, r2, r3
+ 80004ee:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
+ 80004f2:	fb02 f303 	mul.w	r3, r2, r3
+ 80004f6:	461a      	mov	r2, r3
+ 80004f8:	68fb      	ldr	r3, [r7, #12]
+ 80004fa:	429a      	cmp	r2, r3
+ 80004fc:	d8ee      	bhi.n	80004dc <Freq_Function+0x48>
+	PORTD_ODR = 0xC000;//RED=1, GREEN=0, ORANGE=0, BLUE=1
+ 80004fe:	4b1b      	ldr	r3, [pc, #108]	; (800056c <Freq_Function+0xd8>)
+ 8000500:	f44f 4240 	mov.w	r2, #49152	; 0xc000
+ 8000504:	601a      	str	r2, [r3, #0]
+	for(i=0;i<(n * n * 1000);i++);
+ 8000506:	2300      	movs	r3, #0
+ 8000508:	60fb      	str	r3, [r7, #12]
+ 800050a:	e002      	b.n	8000512 <Freq_Function+0x7e>
+ 800050c:	68fb      	ldr	r3, [r7, #12]
+ 800050e:	3301      	adds	r3, #1
+ 8000510:	60fb      	str	r3, [r7, #12]
+ 8000512:	88fb      	ldrh	r3, [r7, #6]
+ 8000514:	b21b      	sxth	r3, r3
+ 8000516:	88fa      	ldrh	r2, [r7, #6]
+ 8000518:	b212      	sxth	r2, r2
+ 800051a:	fb02 f303 	mul.w	r3, r2, r3
+ 800051e:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
+ 8000522:	fb02 f303 	mul.w	r3, r2, r3
+ 8000526:	461a      	mov	r2, r3
+ 8000528:	68fb      	ldr	r3, [r7, #12]
+ 800052a:	429a      	cmp	r2, r3
+ 800052c:	d8ee      	bhi.n	800050c <Freq_Function+0x78>
+	PORTD_ODR = 0x6000;//RED=1, GREEN=0, ORANGE=1, BLUE=0
+ 800052e:	4b0f      	ldr	r3, [pc, #60]	; (800056c <Freq_Function+0xd8>)
+ 8000530:	f44f 42c0 	mov.w	r2, #24576	; 0x6000
+ 8000534:	601a      	str	r2, [r3, #0]
+	for(i=0;i<(n * n * 1000);i++);
+ 8000536:	2300      	movs	r3, #0
+ 8000538:	60fb      	str	r3, [r7, #12]
+ 800053a:	e002      	b.n	8000542 <Freq_Function+0xae>
+ 800053c:	68fb      	ldr	r3, [r7, #12]
+ 800053e:	3301      	adds	r3, #1
+ 8000540:	60fb      	str	r3, [r7, #12]
+ 8000542:	88fb      	ldrh	r3, [r7, #6]
+ 8000544:	b21b      	sxth	r3, r3
+ 8000546:	88fa      	ldrh	r2, [r7, #6]
+ 8000548:	b212      	sxth	r2, r2
+ 800054a:	fb02 f303 	mul.w	r3, r2, r3
+ 800054e:	f44f 727a 	mov.w	r2, #1000	; 0x3e8
+ 8000552:	fb02 f303 	mul.w	r3, r2, r3
+ 8000556:	461a      	mov	r2, r3
+ 8000558:	68fb      	ldr	r3, [r7, #12]
+ 800055a:	429a      	cmp	r2, r3
+ 800055c:	d8ee      	bhi.n	800053c <Freq_Function+0xa8>
+}
+ 800055e:	bf00      	nop
+ 8000560:	bf00      	nop
+ 8000562:	3714      	adds	r7, #20
+ 8000564:	46bd      	mov	sp, r7
+ 8000566:	bc80      	pop	{r7}
+ 8000568:	4770      	bx	lr
+ 800056a:	bf00      	nop
+ 800056c:	40020c14 	.word	0x40020c14
+
+08000570 <Wiper_Enable_Disadble_Function>:
+
+static void Wiper_Enable_Disadble_Function(void)//Wiper Enable (or) Disable Function
+{
+ 8000570:	b480      	push	{r7}
+ 8000572:	af00      	add	r7, sp, #0
+	if ((timing_monitor > 50000) && (switch_stat == 0))//IF 'timing_monitor' reaches more than 50000 and if 'switch_stat' is 0
+ 8000574:	4b17      	ldr	r3, [pc, #92]	; (80005d4 <Wiper_Enable_Disadble_Function+0x64>)
+ 8000576:	681b      	ldr	r3, [r3, #0]
+ 8000578:	f24c 3250 	movw	r2, #50000	; 0xc350
+ 800057c:	4293      	cmp	r3, r2
+ 800057e:	d925      	bls.n	80005cc <Wiper_Enable_Disadble_Function+0x5c>
+ 8000580:	4b15      	ldr	r3, [pc, #84]	; (80005d8 <Wiper_Enable_Disadble_Function+0x68>)
+ 8000582:	681b      	ldr	r3, [r3, #0]
+ 8000584:	2b00      	cmp	r3, #0
+ 8000586:	d121      	bne.n	80005cc <Wiper_Enable_Disadble_Function+0x5c>
+	{
+		timing_monitor = 0;//Reset 'timing_monitor'
+ 8000588:	4b12      	ldr	r3, [pc, #72]	; (80005d4 <Wiper_Enable_Disadble_Function+0x64>)
+ 800058a:	2200      	movs	r2, #0
+ 800058c:	601a      	str	r2, [r3, #0]
+
+		if(bit_1 == 0)//Initially 'bit_1' variable will be 0. This condition will be used, to perform Wiper Enable (or) Disable task (any one) at a time
+ 800058e:	4b13      	ldr	r3, [pc, #76]	; (80005dc <Wiper_Enable_Disadble_Function+0x6c>)
+ 8000590:	681b      	ldr	r3, [r3, #0]
+ 8000592:	2b00      	cmp	r3, #0
+ 8000594:	d10d      	bne.n	80005b2 <Wiper_Enable_Disadble_Function+0x42>
+		{
+			PORTD_ODR = 0x4000;//SET RED LED
+ 8000596:	4b12      	ldr	r3, [pc, #72]	; (80005e0 <Wiper_Enable_Disadble_Function+0x70>)
+ 8000598:	f44f 4280 	mov.w	r2, #16384	; 0x4000
+ 800059c:	601a      	str	r2, [r3, #0]
+			flag_stat = 1;//'flag_stat' variable ENABLE the Wiper
+ 800059e:	4b11      	ldr	r3, [pc, #68]	; (80005e4 <Wiper_Enable_Disadble_Function+0x74>)
+ 80005a0:	2201      	movs	r2, #1
+ 80005a2:	601a      	str	r2, [r3, #0]
+			bit_1 = 1;//SET 'bit_1' to 1
+ 80005a4:	4b0d      	ldr	r3, [pc, #52]	; (80005dc <Wiper_Enable_Disadble_Function+0x6c>)
+ 80005a6:	2201      	movs	r2, #1
+ 80005a8:	601a      	str	r2, [r3, #0]
+			freq_status = 0;// Initiate 'freq_status' to 0 (i.e., frequency speed)
+ 80005aa:	4b0f      	ldr	r3, [pc, #60]	; (80005e8 <Wiper_Enable_Disadble_Function+0x78>)
+ 80005ac:	2200      	movs	r2, #0
+ 80005ae:	601a      	str	r2, [r3, #0]
+			flag_stat = 0;//Disable the Wiper
+			bit_1 = 0;//Clear 'bit_1'
+		}
+	}
+	else;
+}
+ 80005b0:	e00c      	b.n	80005cc <Wiper_Enable_Disadble_Function+0x5c>
+		else if(bit_1 == 1)
+ 80005b2:	4b0a      	ldr	r3, [pc, #40]	; (80005dc <Wiper_Enable_Disadble_Function+0x6c>)
+ 80005b4:	681b      	ldr	r3, [r3, #0]
+ 80005b6:	2b01      	cmp	r3, #1
+ 80005b8:	d108      	bne.n	80005cc <Wiper_Enable_Disadble_Function+0x5c>
+			PORTD_ODR = 0x0000;//Clear PORTD
+ 80005ba:	4b09      	ldr	r3, [pc, #36]	; (80005e0 <Wiper_Enable_Disadble_Function+0x70>)
+ 80005bc:	2200      	movs	r2, #0
+ 80005be:	601a      	str	r2, [r3, #0]
+			flag_stat = 0;//Disable the Wiper
+ 80005c0:	4b08      	ldr	r3, [pc, #32]	; (80005e4 <Wiper_Enable_Disadble_Function+0x74>)
+ 80005c2:	2200      	movs	r2, #0
+ 80005c4:	601a      	str	r2, [r3, #0]
+			bit_1 = 0;//Clear 'bit_1'
+ 80005c6:	4b05      	ldr	r3, [pc, #20]	; (80005dc <Wiper_Enable_Disadble_Function+0x6c>)
+ 80005c8:	2200      	movs	r2, #0
+ 80005ca:	601a      	str	r2, [r3, #0]
+}
+ 80005cc:	bf00      	nop
+ 80005ce:	46bd      	mov	sp, r7
+ 80005d0:	bc80      	pop	{r7}
+ 80005d2:	4770      	bx	lr
+ 80005d4:	20000028 	.word	0x20000028
+ 80005d8:	2000001c 	.word	0x2000001c
+ 80005dc:	2000002c 	.word	0x2000002c
+ 80005e0:	40020c14 	.word	0x40020c14
+ 80005e4:	20000020 	.word	0x20000020
+ 80005e8:	20000024 	.word	0x20000024
+
+080005ec <Wiper_Switching_Function>:
+
+static void Wiper_Switching_Function(void)//Wiper Frequency Switching Function
+{
+ 80005ec:	b480      	push	{r7}
+ 80005ee:	af00      	add	r7, sp, #0
+	if ((timing_monitor>0) && (timing_monitor<50000) && (flag_stat == 1) && (switch_stat == 0))//IF timing_monitor greater than 0 and timing_monitor less than 50000 and if wiper is in Enable mode and Switch is OFF
+ 80005f0:	4b12      	ldr	r3, [pc, #72]	; (800063c <Wiper_Switching_Function+0x50>)
+ 80005f2:	681b      	ldr	r3, [r3, #0]
+ 80005f4:	2b00      	cmp	r3, #0
+ 80005f6:	d01c      	beq.n	8000632 <Wiper_Switching_Function+0x46>
+ 80005f8:	4b10      	ldr	r3, [pc, #64]	; (800063c <Wiper_Switching_Function+0x50>)
+ 80005fa:	681b      	ldr	r3, [r3, #0]
+ 80005fc:	f24c 324f 	movw	r2, #49999	; 0xc34f
+ 8000600:	4293      	cmp	r3, r2
+ 8000602:	d816      	bhi.n	8000632 <Wiper_Switching_Function+0x46>
+ 8000604:	4b0e      	ldr	r3, [pc, #56]	; (8000640 <Wiper_Switching_Function+0x54>)
+ 8000606:	681b      	ldr	r3, [r3, #0]
+ 8000608:	2b01      	cmp	r3, #1
+ 800060a:	d112      	bne.n	8000632 <Wiper_Switching_Function+0x46>
+ 800060c:	4b0d      	ldr	r3, [pc, #52]	; (8000644 <Wiper_Switching_Function+0x58>)
+ 800060e:	681b      	ldr	r3, [r3, #0]
+ 8000610:	2b00      	cmp	r3, #0
+ 8000612:	d10e      	bne.n	8000632 <Wiper_Switching_Function+0x46>
+	{
+		timing_monitor = 0;//Reset 'timing_monitor'
+ 8000614:	4b09      	ldr	r3, [pc, #36]	; (800063c <Wiper_Switching_Function+0x50>)
+ 8000616:	2200      	movs	r2, #0
+ 8000618:	601a      	str	r2, [r3, #0]
+		freq_status++;//SET the Wiper Frequency
+ 800061a:	4b0b      	ldr	r3, [pc, #44]	; (8000648 <Wiper_Switching_Function+0x5c>)
+ 800061c:	681b      	ldr	r3, [r3, #0]
+ 800061e:	3301      	adds	r3, #1
+ 8000620:	4a09      	ldr	r2, [pc, #36]	; (8000648 <Wiper_Switching_Function+0x5c>)
+ 8000622:	6013      	str	r3, [r2, #0]
+		if (freq_status > 3)//IF switch pressed more than 3 times then it should be reset with 1
+ 8000624:	4b08      	ldr	r3, [pc, #32]	; (8000648 <Wiper_Switching_Function+0x5c>)
+ 8000626:	681b      	ldr	r3, [r3, #0]
+ 8000628:	2b03      	cmp	r3, #3
+ 800062a:	dd02      	ble.n	8000632 <Wiper_Switching_Function+0x46>
+		{
+			freq_status = 1;//Reset frequency
+ 800062c:	4b06      	ldr	r3, [pc, #24]	; (8000648 <Wiper_Switching_Function+0x5c>)
+ 800062e:	2201      	movs	r2, #1
+ 8000630:	601a      	str	r2, [r3, #0]
+		}
+		else;
+	}
+	else;
+}
+ 8000632:	bf00      	nop
+ 8000634:	46bd      	mov	sp, r7
+ 8000636:	bc80      	pop	{r7}
+ 8000638:	4770      	bx	lr
+ 800063a:	bf00      	nop
+ 800063c:	20000028 	.word	0x20000028
+ 8000640:	20000020 	.word	0x20000020
+ 8000644:	2000001c 	.word	0x2000001c
+ 8000648:	20000024 	.word	0x20000024
+
+0800064c <Wiper_Rotation>:
+
+static void Wiper_Rotation(void)//Wiper Rotating Function
+{
+ 800064c:	b580      	push	{r7, lr}
+ 800064e:	af00      	add	r7, sp, #0
+	if (flag_stat == 1)//IF Wiper got Enable
+ 8000650:	4b12      	ldr	r3, [pc, #72]	; (800069c <Wiper_Rotation+0x50>)
+ 8000652:	681b      	ldr	r3, [r3, #0]
+ 8000654:	2b01      	cmp	r3, #1
+ 8000656:	d11f      	bne.n	8000698 <Wiper_Rotation+0x4c>
+	{
+		if (freq_status == 1)//IF Frequency_1 Selected
+ 8000658:	4b11      	ldr	r3, [pc, #68]	; (80006a0 <Wiper_Rotation+0x54>)
+ 800065a:	681b      	ldr	r3, [r3, #0]
+ 800065c:	2b01      	cmp	r3, #1
+ 800065e:	d106      	bne.n	800066e <Wiper_Rotation+0x22>
+			Freq_Function(freq_status);//Passing Frequency_1 value as an argument to the Frequency Function
+ 8000660:	4b0f      	ldr	r3, [pc, #60]	; (80006a0 <Wiper_Rotation+0x54>)
+ 8000662:	681b      	ldr	r3, [r3, #0]
+ 8000664:	b21b      	sxth	r3, r3
+ 8000666:	4618      	mov	r0, r3
+ 8000668:	f7ff ff14 	bl	8000494 <Freq_Function>
+		else if (freq_status == 3)//IF Frequency_3 Selected
+			Freq_Function(freq_status);//Passing Frequency_3 value as an argument to the Frequency Function
+		else;
+	}
+	else;
+}
+ 800066c:	e014      	b.n	8000698 <Wiper_Rotation+0x4c>
+		else if (freq_status == 2)//IF Frequency_2 Selected
+ 800066e:	4b0c      	ldr	r3, [pc, #48]	; (80006a0 <Wiper_Rotation+0x54>)
+ 8000670:	681b      	ldr	r3, [r3, #0]
+ 8000672:	2b02      	cmp	r3, #2
+ 8000674:	d106      	bne.n	8000684 <Wiper_Rotation+0x38>
+			Freq_Function(freq_status);//Passing Frequency_2 value as an argument to the Frequency Function
+ 8000676:	4b0a      	ldr	r3, [pc, #40]	; (80006a0 <Wiper_Rotation+0x54>)
+ 8000678:	681b      	ldr	r3, [r3, #0]
+ 800067a:	b21b      	sxth	r3, r3
+ 800067c:	4618      	mov	r0, r3
+ 800067e:	f7ff ff09 	bl	8000494 <Freq_Function>
+}
+ 8000682:	e009      	b.n	8000698 <Wiper_Rotation+0x4c>
+		else if (freq_status == 3)//IF Frequency_3 Selected
+ 8000684:	4b06      	ldr	r3, [pc, #24]	; (80006a0 <Wiper_Rotation+0x54>)
+ 8000686:	681b      	ldr	r3, [r3, #0]
+ 8000688:	2b03      	cmp	r3, #3
+ 800068a:	d105      	bne.n	8000698 <Wiper_Rotation+0x4c>
+			Freq_Function(freq_status);//Passing Frequency_3 value as an argument to the Frequency Function
+ 800068c:	4b04      	ldr	r3, [pc, #16]	; (80006a0 <Wiper_Rotation+0x54>)
+ 800068e:	681b      	ldr	r3, [r3, #0]
+ 8000690:	b21b      	sxth	r3, r3
+ 8000692:	4618      	mov	r0, r3
+ 8000694:	f7ff fefe 	bl	8000494 <Freq_Function>
+}
+ 8000698:	bf00      	nop
+ 800069a:	bd80      	pop	{r7, pc}
+ 800069c:	20000020 	.word	0x20000020
+ 80006a0:	20000024 	.word	0x20000024
+
+080006a4 <main>:
+
+int main()//Main Function
+{
+ 80006a4:	b580      	push	{r7, lr}
+ 80006a6:	af00      	add	r7, sp, #0
+	/********************************************************************************
+	 * NOTE: PRESS THE SWITCH MORE THAN 3 TO 4 SECONDS TO ENABLE (OR) DIABLE THE WIPER
+	 * After Enabling the Wiper give minimum 10ms of duration to change the Frequency Speed
+	 ********************************************************************************/
+
+	Init_Function();//GPIO and Clock Initialization Function
+ 80006a8:	f7ff fe8e 	bl	80003c8 <Init_Function>
+	Intr_Function_Init();//External Interrupt Initialization Function
+ 80006ac:	f7ff feb8 	bl	8000420 <Intr_Function_Init>
+	while(1)
+	{
+		Wiper_Enable_Disadble_Function();//Wiper Enable (or) Disable Function
+ 80006b0:	f7ff ff5e 	bl	8000570 <Wiper_Enable_Disadble_Function>
+		Wiper_Switching_Function();//Wiper Frequency Switching Function
+ 80006b4:	f7ff ff9a 	bl	80005ec <Wiper_Switching_Function>
+		Wiper_Rotation();//Wiper Rotating Function
+ 80006b8:	f7ff ffc8 	bl	800064c <Wiper_Rotation>
+		Wiper_Enable_Disadble_Function();//Wiper Enable (or) Disable Function
+ 80006bc:	e7f8      	b.n	80006b0 <main+0xc>
+
+080006be <Default_Handler>:
+	(uint32_t) HASH_RNG_IRQHandler,
+	(uint32_t) FPU_IRQHandler,
+};
+
+void Default_Handler(void)
+{
+ 80006be:	b480      	push	{r7}
+ 80006c0:	af00      	add	r7, sp, #0
+	while(1);
+ 80006c2:	e7fe      	b.n	80006c2 <Default_Handler+0x4>
+
+080006c4 <Reset_Handler>:
+}
+
+void Reset_Handler(void)
+{
+ 80006c4:	b580      	push	{r7, lr}
+ 80006c6:	b086      	sub	sp, #24
+ 80006c8:	af00      	add	r7, sp, #0
+	// Copy .data section to SRAM
+	uint32_t size = (uint32_t) &_edata - (uint32_t) &_sdata;
+ 80006ca:	4a1b      	ldr	r2, [pc, #108]	; (8000738 <Reset_Handler+0x74>)
+ 80006cc:	4b1b      	ldr	r3, [pc, #108]	; (800073c <Reset_Handler+0x78>)
+ 80006ce:	1ad3      	subs	r3, r2, r3
+ 80006d0:	607b      	str	r3, [r7, #4]
+
+	uint8_t *dest = (uint8_t *) &_sdata; // SRAM
+ 80006d2:	4b1a      	ldr	r3, [pc, #104]	; (800073c <Reset_Handler+0x78>)
+ 80006d4:	617b      	str	r3, [r7, #20]
+	uint8_t *src = (uint8_t *) &_sidata; // Flash
+ 80006d6:	4b1a      	ldr	r3, [pc, #104]	; (8000740 <Reset_Handler+0x7c>)
+ 80006d8:	613b      	str	r3, [r7, #16]
+
+	for(uint32_t i =0 ; i < size ; i++)
+ 80006da:	2300      	movs	r3, #0
+ 80006dc:	60fb      	str	r3, [r7, #12]
+ 80006de:	e00a      	b.n	80006f6 <Reset_Handler+0x32>
+	{
+		*dest++ = *src++;
+ 80006e0:	693a      	ldr	r2, [r7, #16]
+ 80006e2:	1c53      	adds	r3, r2, #1
+ 80006e4:	613b      	str	r3, [r7, #16]
+ 80006e6:	697b      	ldr	r3, [r7, #20]
+ 80006e8:	1c59      	adds	r1, r3, #1
+ 80006ea:	6179      	str	r1, [r7, #20]
+ 80006ec:	7812      	ldrb	r2, [r2, #0]
+ 80006ee:	701a      	strb	r2, [r3, #0]
+	for(uint32_t i =0 ; i < size ; i++)
+ 80006f0:	68fb      	ldr	r3, [r7, #12]
+ 80006f2:	3301      	adds	r3, #1
+ 80006f4:	60fb      	str	r3, [r7, #12]
+ 80006f6:	68fa      	ldr	r2, [r7, #12]
+ 80006f8:	687b      	ldr	r3, [r7, #4]
+ 80006fa:	429a      	cmp	r2, r3
+ 80006fc:	d3f0      	bcc.n	80006e0 <Reset_Handler+0x1c>
+	}
+
+	// Init. the .bss section to zero in SRAM
+	size = (uint32_t) &_ebss - (uint32_t) &_sbss;
+ 80006fe:	4a11      	ldr	r2, [pc, #68]	; (8000744 <Reset_Handler+0x80>)
+ 8000700:	4b11      	ldr	r3, [pc, #68]	; (8000748 <Reset_Handler+0x84>)
+ 8000702:	1ad3      	subs	r3, r2, r3
+ 8000704:	607b      	str	r3, [r7, #4]
+	dest = (uint8_t *) &_sbss;
+ 8000706:	4b10      	ldr	r3, [pc, #64]	; (8000748 <Reset_Handler+0x84>)
+ 8000708:	617b      	str	r3, [r7, #20]
+	for(uint32_t i = 0 ; i < size ; i++)
+ 800070a:	2300      	movs	r3, #0
+ 800070c:	60bb      	str	r3, [r7, #8]
+ 800070e:	e007      	b.n	8000720 <Reset_Handler+0x5c>
+	{
+		*dest++ = 0;
+ 8000710:	697b      	ldr	r3, [r7, #20]
+ 8000712:	1c5a      	adds	r2, r3, #1
+ 8000714:	617a      	str	r2, [r7, #20]
+ 8000716:	2200      	movs	r2, #0
+ 8000718:	701a      	strb	r2, [r3, #0]
+	for(uint32_t i = 0 ; i < size ; i++)
+ 800071a:	68bb      	ldr	r3, [r7, #8]
+ 800071c:	3301      	adds	r3, #1
+ 800071e:	60bb      	str	r3, [r7, #8]
+ 8000720:	68ba      	ldr	r2, [r7, #8]
+ 8000722:	687b      	ldr	r3, [r7, #4]
+ 8000724:	429a      	cmp	r2, r3
+ 8000726:	d3f3      	bcc.n	8000710 <Reset_Handler+0x4c>
+	}
+
+	__libc_init_array();
+ 8000728:	f000 f810 	bl	800074c <__libc_init_array>
+
+	main();
+ 800072c:	f7ff ffba 	bl	80006a4 <main>
+}
+ 8000730:	bf00      	nop
+ 8000732:	3718      	adds	r7, #24
+ 8000734:	46bd      	mov	sp, r7
+ 8000736:	bd80      	pop	{r7, pc}
+ 8000738:	20000000 	.word	0x20000000
+ 800073c:	20000000 	.word	0x20000000
+ 8000740:	080007b4 	.word	0x080007b4
+ 8000744:	20000030 	.word	0x20000030
+ 8000748:	20000000 	.word	0x20000000
+
+0800074c <__libc_init_array>:
+ 800074c:	b570      	push	{r4, r5, r6, lr}
+ 800074e:	4d0d      	ldr	r5, [pc, #52]	; (8000784 <__libc_init_array+0x38>)
+ 8000750:	4c0d      	ldr	r4, [pc, #52]	; (8000788 <__libc_init_array+0x3c>)
+ 8000752:	1b64      	subs	r4, r4, r5
+ 8000754:	10a4      	asrs	r4, r4, #2
+ 8000756:	2600      	movs	r6, #0
+ 8000758:	42a6      	cmp	r6, r4
+ 800075a:	d109      	bne.n	8000770 <__libc_init_array+0x24>
+ 800075c:	4d0b      	ldr	r5, [pc, #44]	; (800078c <__libc_init_array+0x40>)
+ 800075e:	4c0c      	ldr	r4, [pc, #48]	; (8000790 <__libc_init_array+0x44>)
+ 8000760:	f000 f818 	bl	8000794 <_init>
+ 8000764:	1b64      	subs	r4, r4, r5
+ 8000766:	10a4      	asrs	r4, r4, #2
+ 8000768:	2600      	movs	r6, #0
+ 800076a:	42a6      	cmp	r6, r4
+ 800076c:	d105      	bne.n	800077a <__libc_init_array+0x2e>
+ 800076e:	bd70      	pop	{r4, r5, r6, pc}
+ 8000770:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000774:	4798      	blx	r3
+ 8000776:	3601      	adds	r6, #1
+ 8000778:	e7ee      	b.n	8000758 <__libc_init_array+0xc>
+ 800077a:	f855 3b04 	ldr.w	r3, [r5], #4
+ 800077e:	4798      	blx	r3
+ 8000780:	3601      	adds	r6, #1
+ 8000782:	e7f2      	b.n	800076a <__libc_init_array+0x1e>
+ 8000784:	080007ac 	.word	0x080007ac
+ 8000788:	080007ac 	.word	0x080007ac
+ 800078c:	080007ac 	.word	0x080007ac
+ 8000790:	080007b0 	.word	0x080007b0
+
+08000794 <_init>:
+ 8000794:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000796:	bf00      	nop
+ 8000798:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800079a:	bc08      	pop	{r3}
+ 800079c:	469e      	mov	lr, r3
+ 800079e:	4770      	bx	lr
+
+080007a0 <_fini>:
+ 80007a0:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80007a2:	bf00      	nop
+ 80007a4:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80007a6:	bc08      	pop	{r3}
+ 80007a8:	469e      	mov	lr, r3
+ 80007aa:	4770      	bx	lr
