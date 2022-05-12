@@ -1,0 +1,9 @@
+../Src/main.c:10:6:EXTI0_IRQHandler	8	static
+../Src/main.c:23:13:Init_Function	4	static
+../Src/main.c:33:13:Intr_Function_Init	4	static
+../Src/main.c:42:13:Intr_Clean_Function	4	static
+../Src/main.c:47:13:Freq_Function	24	static
+../Src/main.c:61:13:Wiper_Enable_Disadble_Function	4	static
+../Src/main.c:84:13:Wiper_Switching_Function	4	static
+../Src/main.c:99:13:Wiper_Rotation	8	static
+../Src/main.c:114:5:main	8	static
