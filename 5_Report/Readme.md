@@ -1,3 +1,6 @@
+# Abstract
+Wipers are the components needed to remove raindrops and other liquids from the windshield of a vehicle. In previous systems, it was necessary to change the frequency and manually activate the wiper. As a result, the operation to increase the wiper speed changes. The goal of the project is to improve the aging car system by providing an automated transmission wiping system, improve the system by incorporating sensors and actuators, and create simple software that works perfectly with the system. Framework The principle of this proposed wiper system is comparable to that of other existing traditional wipers. Nevertheless, this system will be upgraded to an automated control system that uses a peripheral interface to remove water from the windshield.
+
 # INTRODUCTION
  The operating speed of the wiper is controlled by the wiper speed control system according to the frequency. The pulse signal is digitally processed to provide a control signal. The wiper driver circuit receives the control signal and adjusts the operating speed and timing accordingly.
 # SOFTWARE REQUIREMENTS
