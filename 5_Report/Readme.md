@@ -23,6 +23,20 @@ Wipers are the components needed to remove raindrops and other liquids from the 
   * This module can be found in a variety of household products.
  # WORKING PRINCIPLE
  Suppose the car is a microcontroller. Press the button to turn on the first LED (red), click it again to activate the wiper and turn on the second LED (blue) at the desired speed. When you press the button again, the third LED (green) will light up and the wiper will be faster than the previous LED. Press four times to turn on the fourth LED (orange) and increase the wiper speed as it did before. The microcontroller (vehicle) turns off after the 5th click.
+ 
+## OFF State 
+ ![pic4](https://user-images.githubusercontent.com/71280538/168414861-a5566e66-f483-4399-9616-a6b6de370167.png)
+ 
+## ON State
+ ![Pic1](https://user-images.githubusercontent.com/71280538/168414894-fe978caf-b71b-433f-be3a-a3d1b307e8c8.png)
+
+## Low Speed
+![pic2](https://user-images.githubusercontent.com/71280538/168414943-f09f0f8e-dd73-4810-bc4c-1f116a9eaae9.png)
+
+## High Speed
+![pic3](https://user-images.githubusercontent.com/71280538/168414959-b4661a43-5738-4ef2-a7b9-4d58d269705c.png)
+
+
  ## 4 W'S
  # WHAT IS WIPER SYSTEM
   Windscreen wipers are necessary for maintaining sufficient view for the driver, especially in modern high-speed cars.
